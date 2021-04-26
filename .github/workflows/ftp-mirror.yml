@@ -1,0 +1,28 @@
+name: Mirror FTP server
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      clean:
+        description: Remove old files
+        required: false
+
+jobs:
+  mirror:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MSYS
+          install: git
+          update: false
+      - name: Mirror files
+        run: ./mirror.sh
+        env:
+          CLEAN: ${{ github.event.inputs.clean }}
+        shell: msys2 {0}
+      - name: Commit update
+        run: ./commit.sh
+        shell: msys2 {0}
