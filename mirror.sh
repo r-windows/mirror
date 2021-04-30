@@ -5,9 +5,10 @@ set -e
 if [ "${CLEAN}" ]; then
 echo "Running with clean"
 rm -Rf mingw32 mingw64 ucrt64
+else
+./restore-timestamps.sh
 fi
 mkdir -p {mingw32,mingw64,ucrt64}
-./restore-timestamps.sh
 
 # Cleanup and switch to staging server
 cp -f pacman.conf /etc/pacman.conf
