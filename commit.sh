@@ -6,7 +6,7 @@ git config --global user.email 'jeroenooms@gmail.com'
 git config --global user.name  'Jeroen Ooms (via CI)'
 
 # Commit files
-git add mingw32 mingw64 ucrt64
+git add mirrors mingw32 mingw64 ucrt64
 if [[ -z $(git diff --name-only --cached) ]]; then
 	echo "No changes to commit"
 	exit 0

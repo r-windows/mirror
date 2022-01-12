@@ -4,17 +4,23 @@ set -e
 #  Wipe existing dir
 if [ "${CLEAN}" ]; then
 echo "Running with clean"
-rm -Rf mingw32 mingw64 ucrt64
+rm -Rf mirrors mingw32 mingw64 ucrt64
 else
 ./restore-timestamps.sh
 fi
-mkdir -p {mingw32,mingw64,ucrt64}
+mkdir -p {mirrors,mingw32,mingw64,ucrt64}
 
 # Cleanup and switch to staging server
 cp -f pacman.conf /etc/pacman.conf
 pacman --noconfirm -Rcsu $(pacman -Qqe | grep "^mingw-w64-") || true
 pacman -Scc
 pacman -Syy
+
+# Download rtools-mirrors index
+(cd mirrors;
+  curl -OL https://ftp.opencpu.org/rtools/x86_64/mirrors.db;
+  curl -OL https://ftp.opencpu.org/rtools/x86_64/mirrors.files;
+  pacman -Syyw --noconfirm --cache=. rtools-mirrors)
 
 # Download mingw32
 (cd mingw32; 
